@@ -4,9 +4,9 @@ const calculator = document.getElementById("calc-table");
 const miniScreen = document.getElementById("mini-screen");
 
 let num1 = "";
+let num2 = "";
 let math = "";
 let operationStatus = false;
-let num2 = "";
 //FUNCTIONS
 
 const add = (n1, n2) => n1 + n2;
@@ -58,24 +58,17 @@ const writeResult = number => {
 }
 
 //get the operation
-let temp = "";
 const getOperation = (data, key) => {
     operationStatus = true;
-    if(num1 !== "") {
-        // temp = num1.slice('')
-        // miniScreen.textContent =  temp
-        operate()
-    }
-    
+    if(num1 !== "") operate() 
+
     num1 = result.textContent;
     math = data;
-    //temp = num1.slice('')
-    //if(num2) miniScreen.textContent =  temp + key + num2 + "="
-    //if(!num2) miniScreen.textContent = num1 + key
-    miniScreen.textContent = num1 + key
+    
+    miniScreen.textContent += num1 + key
     if(data === "expo") operate();
     if(data === "sqrt") operate();
-
+    
 }
 //show the result
 const operate = () => {
@@ -83,7 +76,7 @@ const operate = () => {
     if(!math || num1 === "") return result.textContent = "ERROR"
     
     num2 = Number(result.textContent);
-
+    
     if(math === "add") {
         res = add(Number(num1),num2)
     } 
@@ -97,35 +90,38 @@ const operate = () => {
         if(result.textContent === "0") return result.textContent = "ERROR"
         res = divide(Number(num1),num2)
     }
-
+    
     if(math === "module") {
         res = module(Number(num1),num2)
     }
-
+    
     if(math === "expo") {
         num2 = ""
         res = expo(Number(result.textContent))
     }
-
+    
     if(math === "sqrt") {
         num2 = ""
         res = sqrt(Number(result.textContent))
     }
-
+    
     if(res.toString().includes('.') && res.toString().length > 12) result.textContent = res.toFixed(12);
     if(res.toString().length > 12 && !res.toString().includes('.')) {
         result.textContent = Math.round(res);
-        }
-        
+    }
+    
     result.textContent = res;
     if(result.textContent === "Infinity" || result.textContent === "NaN") {
         miniScreen.textContent = "sorry! result is too big";
         result.textContent = "error";
     }
     num1 = "";
-    // num1 !== "" ? miniScreen.textContent += math + num2 + "="
-    // : miniScreen.textContent = temp + math + num2 + "="
-    miniScreen.textContent += num2 + "=";
+    
+    if(miniScreen.textContent.includes('=')) {     
+        miniScreen.textContent = miniScreen.textContent.slice(miniScreen.textContent.indexOf("=")+1);
+    }   
+    
+    miniScreen.textContent += `${num2}= `;
     operationStatus = true;
 }
 
